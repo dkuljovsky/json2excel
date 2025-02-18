@@ -23,6 +23,7 @@ function JSONtoExcelHandler(req, res) {
 	try {
 		jsonData = JSON.parse(jsonFile.buffer.toString('utf8'))
 	} catch (error) {
+		console.error('Error parsing JSON:', error)
 		return res.status(400).json({ message: 'Invalid JSON file' })
 	}
 
@@ -58,11 +59,21 @@ function JSONtoExcelHandler(req, res) {
 		)
 		res.setHeader('Content-Disposition', 'attachment; filename=converted.xlsx')
 
-		workbook.writeToBuffer().then((buffer) => {
-			res.send(buffer)
-		})
+		workbook
+			.writeToBuffer()
+			.then((buffer) => {
+				res.send(buffer)
+				jsonFile.buffer = null
+				jsonData = null
+			})
+			.catch((error) => {
+				console.error('Error writing to buffer:', error)
+
+				res.status(500).json({ message: 'Error generating Excel file' })
+			})
 	} catch (error) {
 		console.error('Error processing JSON:', error)
+
 		res.status(500).json({ message: 'Error processing JSON file' }) // Handle errors
 	}
 }
