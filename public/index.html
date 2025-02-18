@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link rel="stylesheet" href="style.css" />
+		<script type="importmap">
+			{
+				"imports": {
+					"vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+				}
+			}
+		</script>
+		<script src="main.js" defer type="module"></script>
+	</head>
+	<body>
+		<main id="app">
+			<form id="form" @submit.prevent="handleSubmit">
+				<h2>JSON2Excel</h2>
+
+				<p>
+					This tool converts a JSON file into an Excel file. It's useful for creating
+					Excel files from JSON translations.
+				</p>
+
+				<label>
+					Upload a JSON file
+					<input
+						ref="fileInput"
+						@change="handleFileChange"
+						type="file"
+						accept=".json"
+					/>
+				</label>
+
+				<div v-if="file" class="file-info">
+					<span> {{file?.name}} </span>
+
+					<span> ({{ getFileSize(file?.size)}})</span>
+				</div>
+
+				<button type="submit" :disabled="!file || uploadStatus === 'pending'">
+					{{uploadStatus === 'pending' ? 'Cooking...' : 'Cook'}}
+				</button>
+			</form>
+		</main>
+	</body>
+</html>
