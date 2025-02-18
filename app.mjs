@@ -9,6 +9,8 @@ const upload = multer({ storage })
 
 app.use(express.static('public'))
 
+const PORT = process.env.PORT ?? 6969
+
 function JSONtoExcelHandler(req, res) {
 	const jsonFile = req.file
 
@@ -69,6 +71,6 @@ app.post('/cook', upload.single('file'), (req, res) => {
 	JSONtoExcelHandler(req, res)
 })
 
-app.listen(6969, () => {
-	console.log('Server is running on port 6969')
+app.listen(PORT, () => {
+	console.log(`Server is running on port ${PORT}.`)
 })
